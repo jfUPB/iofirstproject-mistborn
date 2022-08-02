@@ -60,18 +60,29 @@ void task1()
         }
 
         // Evento 2
-        if (btn1State == LOW)
+        if (btn1State == LOW && btn2State == LOW)
+        {
             digitalWrite(ledRed, HIGH);
+            Serial.println("Rojo: ON");
+        }
         // Evento 3
-        if (btn2State == LOW)
+        if (btn1State == LOW && btn2State == HIGH)
+        {
             digitalWrite(ledGreen, HIGH);
+            Serial.println("Verde: ON");
+        }
         // Evento 4
-        if (btn3State == LOW)
+        if (btn1State == HIGH && btn2State == LOW)
+        {
             digitalWrite(ledBlue, HIGH);
+            Serial.println("Azul: ON");
+        }
+            
         // Evento 5
-        if (btn4State == LOW)
+        if (btn1State == HIGH && btn2State == HIGH){
             digitalWrite(ledYellow, HIGH);
-
+            Serial.println("Amarillo: ON");
+        }
         break;
     }
     default:
