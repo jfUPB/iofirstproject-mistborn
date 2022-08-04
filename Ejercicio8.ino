@@ -8,6 +8,10 @@ void task1()
     };
     static Task1States task1State = Task1States::INIT;
 
+    // Va a verificar si se cambió o no de configuración
+    static uint8_t btn1OldState = HIGH;
+    static uint8_t btn2OldState = HIGH;
+
     // Definición de variables static (conservan
     // su valor entre llamadas a task1)
     static uint32_t lasTime = 0;
@@ -30,7 +34,7 @@ void task1()
     {
     case Task1States::INIT:
     {
-        Serial.begin(115200);
+        Serial.begin(9600);
         pinMode(button1Pin, INPUT_PULLUP);
         pinMode(button2Pin, INPUT_PULLUP);
         pinMode(button3Pin, INPUT_PULLUP);
@@ -56,32 +60,57 @@ void task1()
         if ((currentTime - lasTime) >= INTERVAL)
         {
             lasTime = currentTime;
-            printf("btn1: %d,btn2: %d, btn3: %d, btn4: %d\n", btn1State, btn2State, btn3State, btn4State);
+            Serial.print("btn1: ");
+            Serial.print(btn1State);
+            Serial.print(", btn2: ");
+            Serial.println(btn2State);
+
+            //printf("btn1: %d,btn2: %d, btn3: %d, btn4: %d\n", btn1State, btn2State, btn3State, btn4State);
         }
 
-        // Evento 2
-        if (btn1State == LOW && btn2State == LOW)
+        if ((btn1State != btn1OldState) || (btn2State != btn2OldState))
         {
-            digitalWrite(ledRed, HIGH);
-            Serial.println("Rojo: ON");
-        }
-        // Evento 3
-        if (btn1State == LOW && btn2State == HIGH)
-        {
-            digitalWrite(ledGreen, HIGH);
-            Serial.println("Verde: ON");
-        }
-        // Evento 4
-        if (btn1State == HIGH && btn2State == LOW)
-        {
-            digitalWrite(ledBlue, HIGH);
-            Serial.println("Azul: ON");
-        }
-            
-        // Evento 5
-        if (btn1State == HIGH && btn2State == HIGH){
-            digitalWrite(ledYellow, HIGH);
-            Serial.println("Amarillo: ON");
+
+            btn1OldState = btn1State;
+            btn2OldState = btn2State;
+
+            // Evento 2
+            if (btn1State == LOW && btn2State == LOW)
+            {
+                digitalWrite(ledRed, HIGH);
+                Serial.println("Rojo: ON");
+                digitalWrite(ledBlue, LOW);
+                digitalWrite(ledGreen, LOW);
+                digitalWrite(ledYellow, LOW);
+            }
+            // Evento 3
+            if (btn1State == LOW && btn2State == HIGH)
+            {
+                digitalWrite(ledGreen, HIGH);
+                Serial.println("Verde: ON");
+                digitalWrite(ledBlue, LOW);
+                digitalWrite(ledRed, LOW);
+                digitalWrite(ledYellow, LOW);
+            }
+            // Evento 4
+            if (btn1State == HIGH && btn2State == LOW)
+            {
+                digitalWrite(ledBlue, HIGH);
+                Serial.println("Azul: ON");
+                digitalWrite(ledRed, LOW);
+                digitalWrite(ledGreen, LOW);
+                digitalWrite(ledYellow, LOW);
+            }
+
+            // Evento 5
+            if (btn1State == HIGH && btn2State == HIGH)
+            {
+                digitalWrite(ledYellow, HIGH);
+                Serial.println("Amarillo: ON");
+                digitalWrite(ledBlue, LOW);
+                digitalWrite(ledGreen, LOW);
+                digitalWrite(ledRed, LOW);
+            }
         }
         break;
     }
